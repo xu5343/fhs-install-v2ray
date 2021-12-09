@@ -78,12 +78,13 @@ installed: /etc/systemd/system/v2ray@.service
 搭建好宝塔并安装nginx
 
 宝塔和nginx完成以后，回到vps SSH窗口
-```
-执行命令
 
-bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
-执行完后，回到宝塔面板，
+执行命令
 ```
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+```
+执行完后，回到宝塔面板，
+
 打开宝塔进入：/usr/local/etc/v2ray  
 
 编辑config.json这个文件，打开文件后先清空里面的内容，再粘贴下面代码进去并保存
