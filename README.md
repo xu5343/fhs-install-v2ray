@@ -199,15 +199,15 @@ bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/
 
 选择Vmess方式
 
-地址（alterId）：域名
-端口：443
-用户（id）：000fe881-b655-4212-b804-b00f9970d5aa
-额外ID：64
-加密方式：auto
-传输方式：ws
-伪装域名：域名（或者为空）
-path：/happy
-底层传输安全（tls）：tls
-跳过证书验证：false
+地址（alterId）：域名  
+端口：443  
+用户（id）：000fe881-b655-4212-b804-b00f9970d5aa  
+额外ID：64  
+加密方式：auto  
+传输方式：ws  
+伪装域名：域名（或者为空）  
+path：/happy  
+底层传输安全（tls）：tls  
+跳过证书验证：false  
 
-参考案例地址：https://iooqp.cn/10725.html
+参考案例地址：https://iooqp.cn/10725.html  
