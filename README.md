@@ -69,3 +69,144 @@ installed: /etc/systemd/system/v2ray@.service
 請於 [develop](https://github.com/v2fly/fhs-install-v2ray/tree/develop) 分支進行，以避免對主分支造成破壞。
 
 待確定無誤後，兩分支將進行合併。
+
+
+宝塔方式：
+
+准备一个域名和一台vps，并将域名解析到vps。Freenom 可以注册免费域名
+
+搭建好宝塔并安装nginx
+
+宝塔和nginx完成以后，回到vps SSH窗口
+```
+执行命令
+
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+执行完后，回到宝塔面板，
+```
+打开宝塔进入：/usr/local/etc/v2ray  
+
+编辑config.json这个文件，打开文件后先清空里面的内容，再粘贴下面代码进去并保存
+```
+{
+  "log": {
+    "loglevel": "info",
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log"
+  },
+  "inbounds": [
+    {
+      "port": 10000,
+      "listen":"127.0.0.1",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "000fe881-b655-4212-b804-b00f9970d5aa",
+            "alterId": 64
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+        "path": "/happy"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
+}
+```
+
+代码中的000fe881-b655-4212-b804-b00f9970d5aa可以变更一下。比如换几个数字。相当于是个密码。但是格式必须相同(小火箭里的UUID指的就是这串代码)
+
+然后宝塔新建一个网站(域名是文章开头你解析的)，
+
+首先申请SSL证书(这步不用说了吧)
+
+然后点击配置文件，在配置文件最顶部添加以下代码
+
+```
+# 定义变量
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  ''      close;
+}
+```
+
+然后添加配置到宝塔配置文件中，以下代码
+```
+    #v2配置文件
+location /happy {
+    proxy_pass       http://127.0.0.1:10000;
+    proxy_redirect             off;
+    proxy_http_version         1.1;
+    proxy_set_header Upgrade   $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host      $http_host;
+    }
+```
+保存
+
+回到vps SSH窗口
+
+启动v2ray
+```
+systemctl start v2ray
+```
+设置开机自启
+```
+systemctl enable v2ray
+```
+OK，V2ray服务端已全部完成
+
+v2ray其他常用命令
+## 启动
+```
+systemctl start v2ray
+```
+## 停止
+```
+systemctl stop v2ray
+```
+## 重启
+```
+systemctl restart v2ray
+```
+## 开机自启
+```
+systemctl enable v2ray
+```
+##卸载v2ray
+先停止v2ray
+```
+systemctl stop v2ray
+systemctl disable v2ray
+```
+再执行一键移除
+```
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove
+```
+
+安卓、PC、V2rayNG配置：
+
+选择Vmess方式
+
+地址（alterId）：域名
+端口：443
+用户（id）：000fe881-b655-4212-b804-b00f9970d5aa
+额外ID：64
+加密方式：auto
+传输方式：ws
+伪装域名：域名（或者为空）
+path：/happy
+底层传输安全（tls）：tls
+跳过证书验证：false
+
+参考案例地址：https://iooqp.cn/10725.html
